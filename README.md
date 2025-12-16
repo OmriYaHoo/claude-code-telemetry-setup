@@ -4,6 +4,11 @@ A complete, production-ready monitoring solution for tracking Claude Code usage 
 
 ![Dashboard Preview](https://img.shields.io/badge/Grafana-Dashboard-orange?logo=grafana) ![Docker](https://img.shields.io/badge/Docker-Compose-blue?logo=docker) ![License](https://img.shields.io/badge/License-MIT-green)
 
+## Example Dashboard
+
+![Dashboard Example](dashboard_example.jpg)
+
+
 ## Features
 
 ✨ **22 Visualization Panels** organized in 4 collapsible sections  

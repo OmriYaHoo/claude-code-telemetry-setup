@@ -17,8 +17,3 @@ desktop.ini
 # Temp files
 *.tmp
 *.log
-
-# Screenshots and test images (optional - remove this line if you want to include screenshots)
-*.png
-*.jpg
-*.jpeg
