@@ -1,0 +1,24 @@
+# Data directories
+grafana-data/
+prometheus-data/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temp files
+*.tmp
+*.log
+
+# Screenshots and test images (optional - remove this line if you want to include screenshots)
+*.png
+*.jpg
+*.jpeg
