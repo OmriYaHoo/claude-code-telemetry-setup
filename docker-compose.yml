@@ -5,6 +5,7 @@ services:
   otel-collector:
     image: otel/opentelemetry-collector-contrib:latest
     container_name: claude-code-otel-collector
+    restart: unless-stopped
     command: ["--config=/etc/otel-collector-config.yaml"]
     volumes:
       - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
@@ -20,6 +21,7 @@ services:
   prometheus:
     image: prom/prometheus:latest
     container_name: claude-code-prometheus
+    restart: unless-stopped
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
@@ -39,6 +41,7 @@ services:
   grafana:
     image: grafana/grafana:latest
     container_name: claude-code-grafana
+    restart: unless-stopped
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
