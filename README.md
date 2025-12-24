@@ -4,6 +4,24 @@ A complete, production-ready monitoring solution for tracking Claude Code usage 
 
 ![Dashboard Preview](https://img.shields.io/badge/Grafana-Dashboard-orange?logo=grafana) ![Docker](https://img.shields.io/badge/Docker-Compose-blue?logo=docker) ![License](https://img.shields.io/badge/License-MIT-green)
 
+## Table of Contents
+
+- [Example Dashboard](#example-dashboard)
+- [Features](#features)
+- [Privacy & Security](#privacy--security)
+- [Quick Start](#quick-start)
+- [Dashboard Overview](#dashboard-overview)
+- [What's Monitored](#whats-monitored)
+- [Architecture](#architecture)
+- [Common Commands](#common-commands)
+- [Troubleshooting](#troubleshooting)
+- [Data Retention](#data-retention)
+- [Customizing the Dashboard](#customizing-the-dashboard)
+- [Production Recommendations](#production-recommendations)
+- [Platform Support](#platform-support)
+- [Uninstalling](#uninstalling)
+- [Credits](#credits)
+
 ## Example Dashboard
 
 ![Dashboard Example](dashboard_example.jpg)
@@ -11,12 +29,18 @@ A complete, production-ready monitoring solution for tracking Claude Code usage 
 
 ## Features
 
-✨ **22 Visualization Panels** organized in 4 collapsible sections  
-📊 **Real-time Metrics** - Token usage, costs, cache efficiency  
-🥧 **Visual Breakdowns** - Pie charts, gauges, time series graphs  
-⚡ **One Command Setup** - Get running in under 2 minutes  
-🔒 **Privacy First** - All data stays on your machine  
-🌍 **Cross-Platform** - Works on macOS, Linux, and Windows  
+📊 **Real-time Metrics** - Token usage, costs, cache efficiency
+🥧 **Visual Breakdowns** - Pie charts, gauges, time series graphs
+⚡ **One Command Setup** - Get running in under 2 minutes
+🔒 **Privacy First** - All data stays on your machine
+🌍 **Cross-Platform** - Works on macOS, Linux, and Windows
+
+## Privacy & Security
+
+- **All data stays local** - Nothing is sent to external servers
+- **User prompts are redacted** - Only usage metrics are collected
+- **Opt-in telemetry** - Must be explicitly enabled
+- **Open source stack** - All components are auditable
 
 ## Quick Start
 
@@ -28,8 +52,8 @@ A complete, production-ready monitoring solution for tracking Claude Code usage 
 
 1. **Clone the repository**
 ```bash
-git clone <your-repo-url>
-cd cc-monitoring
+git clone https://github.com/OmriYaHoo/claude-code-telemetry-setup.git
+cd claude-code-telemetry-setup
 ```
 
 2. **Start the monitoring stack**
@@ -37,7 +61,17 @@ cd cc-monitoring
 docker-compose up -d
 ```
 
-3. **Configure Claude Code**
+3. **Configure Claude Code** (choose one option)
+
+**Option A: Automatic setup (recommended)**
+```bash
+./setup-claude-telemetry.sh
+```
+This script safely merges the required environment variables into your existing `~/.claude/settings.json` without overwriting your current configuration. It creates a backup before making changes.
+
+> **Note**: Requires `jq` to be installed (`brew install jq` on macOS, `apt install jq` on Linux)
+
+**Option B: Manual setup**
 
 Add to your Claude Code settings file:
 - **macOS/Linux**: `~/.claude/settings.json`
@@ -55,6 +89,8 @@ Add to your Claude Code settings file:
 }
 ```
 
+> **Note**: If you already have a `settings.json`, merge the `env` object with your existing configuration rather than replacing the entire file.
+
 4. **Restart Claude Code** to apply changes
 
 5. **Access the dashboard**
@@ -62,9 +98,19 @@ Add to your Claude Code settings file:
    - Login with: `admin` / `admin` (you'll be prompted to change the password)
    - The dashboard is automatically provisioned and ready to use!
 
+### Optional: Multi-Team Tracking
+
+Add custom attributes to track usage by team, department, or project by adding `OTEL_RESOURCE_ATTRIBUTES` to your env configuration in the `settings.json` file:
+
+```json
+"OTEL_RESOURCE_ATTRIBUTES": "team.id=platform,department=engineering,project=ai-tools"
+```
+
+Then create Grafana dashboard filters based on these attributes.
+
 ## Dashboard Overview
 
-The dashboard includes **22 visualization panels** organized into **4 collapsible sections**:
+The dashboard is organized into **4 collapsible sections**:
 
 ### 📊 Token Stats
 - Input/output tokens with trends
@@ -114,27 +160,6 @@ The monitoring stack consists of three Docker containers:
 1. **OpenTelemetry Collector** (ports 4317/4318): Receives telemetry from Claude Code
 2. **Prometheus** (port 9090): Stores time-series metrics
 3. **Grafana** (port 3000): Visualizes data with pre-configured dashboard
-
-## Optional Configuration
-
-### Multi-Team Tracking
-
-Add custom attributes to track usage by team, department, or project:
-
-```json
-{
-  "env": {
-    "CLAUDE_CODE_ENABLE_TELEMETRY": "1",
-    "OTEL_METRICS_EXPORTER": "otlp",
-    "OTEL_LOGS_EXPORTER": "otlp",
-    "OTEL_EXPORTER_OTLP_PROTOCOL": "grpc",
-    "OTEL_EXPORTER_OTLP_ENDPOINT": "http://localhost:4317",
-    "OTEL_RESOURCE_ATTRIBUTES": "team.id=platform,department=engineering,project=ai-tools"
-  }
-}
-```
-
-Then create Grafana dashboard filters based on these attributes.
 
 ## Common Commands
 
@@ -251,14 +276,8 @@ The dashboard is provisioned from `grafana-provisioning/dashboards/claude-code-d
 
 **Important**: Export as traditional Grafana JSON format (starts with `{"title": ...}`), not Kubernetes API format.
 
-## Privacy & Security
+## Production Recommendations
 
-- ✅ **All data stays local** - Nothing is sent to external servers
-- ✅ **User prompts are redacted** - Only usage metrics are collected
-- ✅ **Opt-in telemetry** - Must be explicitly enabled
-- ✅ **Open source stack** - All components are auditable
-
-For production use:
 1. Change the default Grafana password (prompted on first login)
 2. Consider adding authentication to the OpenTelemetry Collector
 3. Set up regular backups of the Docker volumes
@@ -288,14 +307,6 @@ docker volume rm cc-monitoring_prometheus-data cc-monitoring_grafana-data
 docker-compose down -v
 ```
 
-## Contributing
-
-Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
 ## Credits
 
 Dashboard design inspired by [mikelane's Claude Code metrics dashboard](https://gist.github.com/mikelane/f6c3a175cd9f92410aba06b5ac24ba54).
-
----
-
-**Questions?** Open an issue on GitHub or check the [CLAUDE.md](CLAUDE.md) for technical details.
