@@ -1,10 +1,20 @@
 {
-  "title": "Claude Code Metrics",
-  "uid": "claude-code-metrics",
-  "timezone": "browser",
-  "schemaVersion": 38,
-  "version": 1,
-  "refresh": "30s",
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
@@ -16,8 +26,10 @@
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
+      "description": "Total Claude Code sessions tracked in selected time range",
       "fieldConfig": {
         "defaults": {
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -55,28 +67,29 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.0.0",
+      "pluginVersion": "12.3.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "expr": "count(count by (session_id)(claude_code_token_usage_tokens_total))",
+          "expr": "count(count by (session_id)(increase(claude_code_token_usage_tokens_total[$__range]) > 0))",
           "refId": "A"
         }
       ],
       "title": "Sessions",
-      "type": "stat",
-      "description": "Total Claude Code sessions tracked"
+      "type": "stat"
     },
     {
       "datasource": {
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
+      "description": "Total code edits made via Claude Code in selected time range",
       "fieldConfig": {
         "defaults": {
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -114,28 +127,32 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.0.0",
+      "pluginVersion": "12.3.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "expr": "sum(claude_code_code_edit_tool_decision_total)",
+          "expr": "sum(increase(claude_code_code_edit_tool_decision_total[$__range]))",
           "refId": "A"
         }
       ],
-      "title": "Commits Made",
-      "type": "stat",
-      "description": "Total commits made via Claude Code"
+      "title": "Code Edits",
+      "type": "stat"
     },
     {
       "datasource": {
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
+      "description": "Time Claude spent actively working in selected time range",
       "fieldConfig": {
         "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -158,8 +175,8 @@
       "id": 3,
       "options": {
         "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "center",
+        "graphMode": "area",
+        "justifyMode": "auto",
         "orientation": "auto",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
@@ -173,28 +190,31 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.0.0",
+      "pluginVersion": "12.3.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "expr": "sum(claude_code_active_time_seconds_total{type=\"cli\"})",
+          "editorMode": "code",
+          "expr": "sum(increase(claude_code_active_time_seconds_total{type=\"cli\"}[$__range]))",
+          "range": true,
           "refId": "A"
         }
       ],
       "title": "Active Time (CLI)",
-      "type": "stat",
-      "description": "Time Claude spent actively working"
+      "type": "stat"
     },
     {
       "datasource": {
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
+      "description": "Time you spent interacting with Claude in selected time range",
       "fieldConfig": {
         "defaults": {
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -232,29 +252,30 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.0.0",
+      "pluginVersion": "12.3.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "expr": "sum(claude_code_active_time_seconds_total{type=\"user\"})",
+          "expr": "sum(increase(claude_code_active_time_seconds_total{type=\"user\"}[$__range]))",
           "refId": "A"
         }
       ],
       "title": "Active Time (You)",
-      "type": "stat",
-      "description": "Time you spent interacting with Claude"
+      "type": "stat"
     },
     {
       "datasource": {
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
+      "description": "Total API cost in USD for selected time range",
       "fieldConfig": {
         "defaults": {
           "decimals": 2,
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -280,7 +301,7 @@
         "h": 4,
         "w": 6,
         "x": 0,
-        "y": 0
+        "y": 4
       },
       "id": 5,
       "options": {
@@ -300,28 +321,29 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.0.0",
+      "pluginVersion": "12.3.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "expr": "sum(claude_code_cost_usage_USD_total)",
+          "expr": "sum(increase(claude_code_cost_usage_USD_total[$__range]))",
           "refId": "A"
         }
       ],
       "title": "Total Cost",
-      "type": "stat",
-      "description": "Total API cost in USD"
+      "type": "stat"
     },
     {
       "datasource": {
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
+      "description": "Lines of code accepted from Claude suggestions in selected time range",
       "fieldConfig": {
         "defaults": {
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -339,7 +361,7 @@
         "h": 4,
         "w": 6,
         "x": 6,
-        "y": 0
+        "y": 4
       },
       "id": 6,
       "options": {
@@ -359,21 +381,20 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.0.0",
+      "pluginVersion": "12.3.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "expr": "sum(sum_over_time(claude_code_lines_of_code_count_total[$__range]))",
-          "refId": "A",
-          "legendFormat": "Lines Accepted"
+          "expr": "sum(increase(claude_code_lines_of_code_count_total[$__range]))",
+          "legendFormat": "Lines Accepted",
+          "refId": "A"
         }
       ],
       "title": "Lines of Code",
-      "type": "stat",
-      "description": "Lines of code accepted from Claude suggestions"
+      "type": "stat"
     },
     {
       "collapsed": false,
@@ -381,7 +402,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 4
+        "y": 8
       },
       "id": 104,
       "panels": [],
@@ -393,8 +414,10 @@
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
+      "description": "Tokens sent to Claude in selected time range",
       "fieldConfig": {
         "defaults": {
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -412,7 +435,7 @@
         "h": 4,
         "w": 6,
         "x": 0,
-        "y": 5
+        "y": 9
       },
       "id": 10,
       "options": {
@@ -432,28 +455,29 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.0.0",
+      "pluginVersion": "12.3.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "expr": "sum(claude_code_token_usage_tokens_total{type=\"input\"})",
+          "expr": "sum(increase(claude_code_token_usage_tokens_total{type=\"input\"}[$__range]))",
           "refId": "A"
         }
       ],
       "title": "Input Tokens",
-      "type": "stat",
-      "description": "Tokens sent to Claude"
+      "type": "stat"
     },
     {
       "datasource": {
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
+      "description": "Tokens generated by Claude in selected time range",
       "fieldConfig": {
         "defaults": {
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -471,7 +495,7 @@
         "h": 4,
         "w": 6,
         "x": 6,
-        "y": 5
+        "y": 9
       },
       "id": 11,
       "options": {
@@ -491,28 +515,29 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.0.0",
+      "pluginVersion": "12.3.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "expr": "sum(claude_code_token_usage_tokens_total{type=\"output\"})",
+          "expr": "sum(increase(claude_code_token_usage_tokens_total{type=\"output\"}[$__range]))",
           "refId": "A"
         }
       ],
       "title": "Output Tokens",
-      "type": "stat",
-      "description": "Tokens generated by Claude"
+      "type": "stat"
     },
     {
       "datasource": {
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
+      "description": "Tokens read from cache (saves money!) in selected time range",
       "fieldConfig": {
         "defaults": {
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -530,7 +555,7 @@
         "h": 4,
         "w": 6,
         "x": 12,
-        "y": 5
+        "y": 9
       },
       "id": 12,
       "options": {
@@ -550,28 +575,29 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.0.0",
+      "pluginVersion": "12.3.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "expr": "sum(claude_code_token_usage_tokens_total{type=\"cacheRead\"})",
+          "expr": "sum(increase(claude_code_token_usage_tokens_total{type=\"cacheRead\"}[$__range]))",
           "refId": "A"
         }
       ],
       "title": "Cache Read",
-      "type": "stat",
-      "description": "Tokens read from cache (saves money!)"
+      "type": "stat"
     },
     {
       "datasource": {
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
+      "description": "Tokens written to cache in selected time range",
       "fieldConfig": {
         "defaults": {
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -589,7 +615,7 @@
         "h": 4,
         "w": 6,
         "x": 18,
-        "y": 5
+        "y": 9
       },
       "id": 13,
       "options": {
@@ -609,28 +635,29 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.0.0",
+      "pluginVersion": "12.3.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "expr": "sum(claude_code_token_usage_tokens_total{type=\"cacheCreation\"})",
+          "expr": "sum(increase(claude_code_token_usage_tokens_total{type=\"cacheCreation\"}[$__range]))",
           "refId": "A"
         }
       ],
       "title": "Cache Creation",
-      "type": "stat",
-      "description": "Tokens written to cache"
+      "type": "stat"
     },
     {
       "datasource": {
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
+      "description": "Percentage of input served from cache in selected time range",
       "fieldConfig": {
         "defaults": {
+          "mappings": [],
           "max": 100,
           "min": 0,
           "thresholds": {
@@ -658,7 +685,7 @@
         "h": 8,
         "w": 8,
         "x": 0,
-        "y": 9
+        "y": 13
       },
       "id": 14,
       "options": {
@@ -676,29 +703,30 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "10.0.0",
+      "pluginVersion": "12.3.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "expr": "sum(claude_code_token_usage_tokens_total{type=\"cacheRead\"}) / (sum(claude_code_token_usage_tokens_total{type=\"cacheRead\"}) + sum(claude_code_token_usage_tokens_total{type=\"input\"})) * 100",
+          "expr": "sum(increase(claude_code_token_usage_tokens_total{type=\"cacheRead\"}[$__range])) / (sum(increase(claude_code_token_usage_tokens_total{type=\"cacheRead\"}[$__range])) + sum(increase(claude_code_token_usage_tokens_total{type=\"input\"}[$__range]))) * 100",
           "refId": "A"
         }
       ],
       "title": "Cache Efficiency",
-      "type": "gauge",
-      "description": "Percentage of input served from cache"
+      "type": "gauge"
     },
     {
       "datasource": {
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
+      "description": "Average cost per 1000 output tokens in selected time range",
       "fieldConfig": {
         "defaults": {
           "decimals": 4,
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -724,7 +752,7 @@
         "h": 4,
         "w": 6,
         "x": 8,
-        "y": 9
+        "y": 13
       },
       "id": 15,
       "options": {
@@ -744,20 +772,19 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.0.0",
+      "pluginVersion": "12.3.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "expr": "sum(claude_code_cost_usage_USD_total) / sum(claude_code_token_usage_tokens_total{type=\"output\"}) * 1000",
+          "expr": "sum(increase(claude_code_cost_usage_USD_total[$__range])) / sum(increase(claude_code_token_usage_tokens_total{type=\"output\"}[$__range])) * 1000",
           "refId": "A"
         }
       ],
       "title": "Cost per 1K Output",
-      "type": "stat",
-      "description": "Average cost per 1000 output tokens"
+      "type": "stat"
     },
     {
       "collapsed": false,
@@ -765,7 +792,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 17
+        "y": 21
       },
       "id": 117,
       "panels": [],
@@ -777,6 +804,7 @@
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
+      "description": "Distribution of token usage by type in selected time range",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -788,7 +816,8 @@
               "tooltip": false,
               "viz": false
             }
-          }
+          },
+          "mappings": []
         },
         "overrides": []
       },
@@ -796,7 +825,7 @@
         "h": 8,
         "w": 8,
         "x": 0,
-        "y": 18
+        "y": 22
       },
       "id": 20,
       "options": {
@@ -824,27 +853,27 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "10.0.0",
+      "pluginVersion": "12.3.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "expr": "sum by (type) (claude_code_token_usage_tokens_total)",
-          "refId": "A",
-          "legendFormat": "{{type}}"
+          "expr": "sum by (type) (increase(claude_code_token_usage_tokens_total[$__range]))",
+          "legendFormat": "{{type}}",
+          "refId": "A"
         }
       ],
       "title": "Tokens by Type",
-      "type": "piechart",
-      "description": "Distribution of token usage by type"
+      "type": "piechart"
     },
     {
       "datasource": {
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
+      "description": "Token usage broken down by model in selected time range",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -856,7 +885,8 @@
               "tooltip": false,
               "viz": false
             }
-          }
+          },
+          "mappings": []
         },
         "overrides": []
       },
@@ -864,7 +894,7 @@
         "h": 8,
         "w": 8,
         "x": 8,
-        "y": 18
+        "y": 22
       },
       "id": 21,
       "options": {
@@ -892,33 +922,34 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "10.0.0",
+      "pluginVersion": "12.3.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "expr": "sum by (model) (claude_code_token_usage_tokens_total)",
-          "refId": "A",
-          "legendFormat": "{{model}}"
+          "expr": "sum by (model) (increase(claude_code_token_usage_tokens_total[$__range]))",
+          "legendFormat": "{{model}}",
+          "refId": "A"
         }
       ],
       "title": "Tokens by Model",
-      "type": "piechart",
-      "description": "Token usage broken down by model"
+      "type": "piechart"
     },
     {
       "datasource": {
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
+      "description": "API cost broken down by model in selected time range",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
           "decimals": 2,
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -944,7 +975,7 @@
         "h": 4,
         "w": 6,
         "x": 16,
-        "y": 18
+        "y": 22
       },
       "id": 22,
       "options": {
@@ -971,21 +1002,20 @@
         "sizing": "auto",
         "valueMode": "color"
       },
-      "pluginVersion": "10.0.0",
+      "pluginVersion": "12.3.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "expr": "sum by (model) (claude_code_cost_usage_USD_total)",
-          "refId": "A",
-          "legendFormat": "{{model}}"
+          "expr": "sum by (model) (increase(claude_code_cost_usage_USD_total[$__range]))",
+          "legendFormat": "{{model}}",
+          "refId": "A"
         }
       ],
       "title": "Cost by Model",
-      "type": "bargauge",
-      "description": "API cost broken down by model"
+      "type": "bargauge"
     },
     {
       "collapsed": false,
@@ -993,7 +1023,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 26
+        "y": 30
       },
       "id": 126,
       "panels": [],
@@ -1005,6 +1035,7 @@
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
+      "description": "CLI processing time vs User interaction time in selected time range",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1017,6 +1048,7 @@
               "viz": false
             }
           },
+          "mappings": [],
           "unit": "s"
         },
         "overrides": []
@@ -1025,7 +1057,7 @@
         "h": 8,
         "w": 8,
         "x": 0,
-        "y": 27
+        "y": 31
       },
       "id": 30,
       "options": {
@@ -1053,30 +1085,31 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "10.0.0",
+      "pluginVersion": "12.3.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "expr": "sum by (type) (claude_code_active_time_seconds_total)",
-          "refId": "A",
-          "legendFormat": "{{type}}"
+          "expr": "sum by (type) (increase(claude_code_active_time_seconds_total[$__range]))",
+          "legendFormat": "{{type}}",
+          "refId": "A"
         }
       ],
       "title": "Active Time Distribution",
-      "type": "piechart",
-      "description": "CLI processing time vs User interaction time"
+      "type": "piechart"
     },
     {
       "datasource": {
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
+      "description": "CLI time / User time - higher = Claude doing more work (in selected time range)",
       "fieldConfig": {
         "defaults": {
           "decimals": 0,
+          "mappings": [],
           "max": 1000,
           "min": 0,
           "thresholds": {
@@ -1108,7 +1141,7 @@
         "h": 8,
         "w": 8,
         "x": 8,
-        "y": 27
+        "y": 31
       },
       "id": 31,
       "options": {
@@ -1126,20 +1159,19 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "10.0.0",
+      "pluginVersion": "12.3.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "expr": "sum(claude_code_active_time_seconds_total{type=\"cli\"}) / sum(claude_code_active_time_seconds_total{type=\"user\"})",
+          "expr": "sum(increase(claude_code_active_time_seconds_total{type=\"cli\"}[$__range])) / sum(increase(claude_code_active_time_seconds_total{type=\"user\"}[$__range]))",
           "refId": "A"
         }
       ],
       "title": "Productivity Ratio",
-      "type": "gauge",
-      "description": "CLI time / User time - higher = Claude doing more work"
+      "type": "gauge"
     },
     {
       "collapsed": false,
@@ -1147,7 +1179,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 35
+        "y": 39
       },
       "id": 135,
       "panels": [],
@@ -1159,6 +1191,7 @@
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
+      "description": "Token consumption rate by type",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1198,6 +1231,7 @@
               "mode": "off"
             }
           },
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -1219,7 +1253,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 36
+        "y": 40
       },
       "id": 40,
       "options": {
@@ -1238,27 +1272,27 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "10.0.0",
+      "pluginVersion": "12.3.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "expr": "sum by (type) (rate(claude_code_token_usage_tokens_total[5m]))",
-          "refId": "A",
-          "legendFormat": "{{type}}"
+          "expr": "sum by (type) (rate(claude_code_token_usage_tokens_total[$__rate_interval]))",
+          "legendFormat": "{{type}}",
+          "refId": "A"
         }
       ],
       "title": "Token Usage Over Time",
-      "type": "timeseries",
-      "description": "Token consumption rate by type"
+      "type": "timeseries"
     },
     {
       "datasource": {
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
+      "description": "Token consumption rate by model",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1298,6 +1332,7 @@
               "mode": "off"
             }
           },
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -1319,7 +1354,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 44
+        "y": 48
       },
       "id": 41,
       "options": {
@@ -1338,27 +1373,27 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "10.0.0",
+      "pluginVersion": "12.3.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "expr": "sum by (model) (rate(claude_code_token_usage_tokens_total[5m]))",
-          "refId": "A",
-          "legendFormat": "{{model}}"
+          "expr": "sum by (model) (rate(claude_code_token_usage_tokens_total[$__rate_interval]))",
+          "legendFormat": "{{model}}",
+          "refId": "A"
         }
       ],
       "title": "Token Usage by Model Over Time",
-      "type": "timeseries",
-      "description": "Token consumption rate by model"
+      "type": "timeseries"
     },
     {
       "datasource": {
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
+      "description": "API cost accumulation rate",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1368,7 +1403,7 @@
             "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
-            "axisLabel": "$/5min",
+            "axisLabel": "$/hour",
             "axisPlacement": "auto",
             "barAlignment": 0,
             "barWidthFactor": 0.6,
@@ -1398,6 +1433,7 @@
               "mode": "off"
             }
           },
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -1419,7 +1455,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 52
+        "y": 56
       },
       "id": 42,
       "options": {
@@ -1438,27 +1474,27 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "10.0.0",
+      "pluginVersion": "12.3.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "expr": "sum by (model) (rate(claude_code_cost_usage_USD_total[5m])) * 300",
-          "refId": "A",
-          "legendFormat": "{{model}}"
+          "expr": "sum by (model) (rate(claude_code_cost_usage_USD_total[$__rate_interval])) * 3600",
+          "legendFormat": "{{model}}",
+          "refId": "A"
         }
       ],
       "title": "Cost Over Time",
-      "type": "timeseries",
-      "description": "API cost accumulation rate"
+      "type": "timeseries"
     },
     {
       "datasource": {
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
+      "description": "CLI and User activity rate",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1498,6 +1534,7 @@
               "mode": "off"
             }
           },
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -1519,7 +1556,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 60
+        "y": 64
       },
       "id": 43,
       "options": {
@@ -1538,23 +1575,25 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "10.0.0",
+      "pluginVersion": "12.3.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "expr": "sum by (type) (rate(claude_code_active_time_seconds_total[5m]))",
-          "refId": "A",
-          "legendFormat": "{{type}}"
+          "expr": "sum by (type) (rate(claude_code_active_time_seconds_total[$__rate_interval]))",
+          "legendFormat": "{{type}}",
+          "refId": "A"
         }
       ],
       "title": "Active Time Over Time",
-      "type": "timeseries",
-      "description": "CLI and User activity rate"
+      "type": "timeseries"
     }
   ],
+  "preload": false,
+  "refresh": "30s",
+  "schemaVersion": 42,
   "tags": [
     "claude-code",
     "monitoring"
@@ -1567,7 +1606,8 @@
     "to": "now"
   },
   "timepicker": {},
-  "annotations": {
-    "list": []
-  }
+  "timezone": "browser",
+  "title": "Claude Code Metrics",
+  "uid": "claude-code-metrics",
+  "version": 2
 }
